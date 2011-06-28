@@ -309,7 +309,7 @@ struct Position StartEvent[]=
 
 struct Position MovePos[]=
 {
-    {461.792f, -2125.85f, 1040.860f, 0.0f}, // move
+    {459.039f, -2124.21f, 1040.860f, 0.0f}, // move
     {503.156f, -2124.51f, 1040.860f, 0.0f}, // move center X: 505.2118 Y: -2124.353 Z: 840.9403
     {490.110f, -2124.98f, 1040.860f, 0.0f}, // move tirion frostmourne
     {467.069f, -2123.58f, 1040.857f, 0.0f}, // move tirion attack
@@ -317,7 +317,8 @@ struct Position MovePos[]=
     {489.297f, -2124.84f, 1040.857f, 0.0f}, //start event tirion move 1
     {503.682f, -2126.63f, 1040.940f, 0.0f}, //boss escapes after wipe
     {508.989f, -2124.55f, 1045.356f, 0.0f}, //boss levitates above the frostmourne
-    {505.212f, -2124.35f, 1040.94f, 3.14159f}
+    {505.212f, -2124.35f, 1040.94f, 3.14159f},
+    {491.759f, -2124.86f, 1040.86f, 0.0f},  // tirion talk position
 };
 struct Position FrostmourneRoom[] = 
 {
@@ -485,7 +486,7 @@ class boss_the_lich_king : public CreatureScript
                 if (IsHeroic())
                     events.ScheduleEvent(EVENT_SHADOW_TRAP, 10000, 0, PHASE_1);
 
-                DoScriptText(SAY_AGGRO, me);
+                //DoScriptText(SAY_AGGRO, me);
                 DoCast(me, SPELL_NECROTIC_PLAGUE_IMMUNITY);
 
                 if (instance)
@@ -1371,38 +1372,55 @@ class npc_tirion_icc : public CreatureScript
                     {
                         case 1:
                         {
-                            if (Creature* lich = Unit::GetCreature(*me, uiLichKingGUID))
-                            {
-                                lich->SetStandState(UNIT_STAND_STATE_STAND);
-                                lich->GetMotionMaster()->MovePoint(POINT_START_EVENT_1, MovePos[0]);
-                                me->SetFacingToObject(lich);
-                            }
-
-                            me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_READY2H);
-                            uiIntroTimer = 3000;
+                            // IntroStarts. Tirion moves to talk position
+                            me->SetUnitMovementFlags(MOVEMENTFLAG_WALKING);
+                            me->GetMotionMaster()->MovePoint(0, MovePos[9]);
+                            uiIntroTimer = 8000;
                             break;
                         }
                         case 2:
                         {
+                            // Tirion reaches talk position, Arthas stands up
                             if (Creature* lich = Unit::GetCreature(*me, uiLichKingGUID))
-                            {
-                                lich->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_ONESHOT_TALK);
-                                DoScriptText(SAY_INTRO_1_KING, lich);
-                            }
+                                lich->SetStandState(UNIT_STAND_STATE_STAND);
 
-                            uiIntroTimer = 14000;
+                            me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_READY2H);
+                            uiIntroTimer = 1000;
                             break;
                         }
                         case 3:
                         {
+                            // Arthas talks
                             if (Creature* lich = Unit::GetCreature(*me, uiLichKingGUID))
-                                lich->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_ONESHOT_NONE);
-
-                            DoScriptText(SAY_INTRO_2_TIRION, me);
-                            uiIntroTimer = 9000;
+                                DoScriptText(SAY_INTRO_1_KING, lich);
+                            uiIntroTimer = 2000;
                             break;
                         }
                         case 4:
+                        {
+                            // Arthas walks downstair
+                            if (Creature* lich = Unit::GetCreature(*me, uiLichKingGUID))
+                            {
+                                lich->SetUInt64Value(UNIT_FIELD_TARGET, me->GetGUID());
+                                lich->SetUnitMovementFlags(MOVEMENTFLAG_WALKING);
+                                lich->GetMotionMaster()->MovePoint(POINT_START_EVENT_1, MovePos[0]);
+                            }
+                            uiIntroTimer = 15000;
+                            break;
+                        }
+                        case 5:
+                        {
+                            // Arthas has reached bottom of stairs, Tirion talks
+                            if (Creature* lich = Unit::GetCreature(*me, uiLichKingGUID))
+                            {
+                                lich->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_ONESHOT_NONE);
+                                me->SetUInt64Value(UNIT_FIELD_TARGET, lich->GetGUID());
+                            }
+                            DoScriptText(SAY_INTRO_2_TIRION, me);
+                            uiIntroTimer = 8000;
+                            break;
+                        }
+                        case 6:
                         {
                             if (Creature* lich = Unit::GetCreature(*me, uiLichKingGUID))
                             {
@@ -1413,7 +1431,7 @@ class npc_tirion_icc : public CreatureScript
                             uiIntroTimer = 3000;
                             break;
                         }
-                        case 5:
+                        case 7:
                         {
                             if (Creature* lich = Unit::GetCreature(*me, uiLichKingGUID))
                                 lich->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_ONESHOT_POINT_NOSHEATHE);
@@ -1421,7 +1439,7 @@ class npc_tirion_icc : public CreatureScript
                             uiIntroTimer = 2000;
                             break;
                         }
-                        case 6:
+                        case 8:
                         {
                             if (Creature* lich = Unit::GetCreature(*me, uiLichKingGUID))
                                 lich->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_ONESHOT_NONE);
@@ -1429,39 +1447,45 @@ class npc_tirion_icc : public CreatureScript
                             uiIntroTimer = 18000;
                             break;
                         }
-                        case 7:
+                        case 9:
                             me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_ONESHOT_POINT_NOSHEATHE);
                             DoScriptText(SAY_INTRO_4_TIRION, me);
-                            uiIntroTimer = 1000;
-                            break;
-                        case 8:
-                            me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_ONESHOT_NONE);
-                            me->GetMotionMaster()->MovePoint(0, MovePos[3]);
-                            uiIntroTimer = 2000;
-                            break;
-                        case 9:
-                            if(Creature* lich = Unit::GetCreature(*me, uiLichKingGUID))
-                                lich->CastSpell(me, SPELL_ICEBLOCK_TRIGGER, true);
-							me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                             uiIntroTimer = 2000;
                             break;
                         case 10:
-                        {
-                            if (Creature* lich = Unit::GetCreature(*me, uiLichKingGUID))
-                                DoScriptText(SAY_INTRO_5_KING, lich);
-
-                            uiIntroTimer = 18000;
+                            // Tirion runs to Arthas
+                            me->RemoveUnitMovementFlag(MOVEMENTFLAG_WALKING);
+                            me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_ONESHOT_NONE);
+                            me->GetMotionMaster()->MovePoint(0, MovePos[3]);
+                            uiIntroTimer = 750;
                             break;
-                        }
                         case 11:
+                            // Arthas freezes Tirion
+                            if(Creature* lich = Unit::GetCreature(*me, uiLichKingGUID))
+                                lich->CastSpell(me, SPELL_ICEBLOCK_TRIGGER, true);
+                            me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+
+                            // From here, Arthas is attackable
+                            if(Creature* lich = Unit::GetCreature(*me, uiLichKingGUID))
+                            {
+                                lich->RemoveUnitMovementFlag(MOVEMENTFLAG_WALKING);
+                                lich->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_OOC_NOT_ATTACKABLE);
+                                lich->SetReactState(REACT_AGGRESSIVE);
+                            }
+                            uiIntroTimer = 2000;
+                            break;
+                        case 12:
                         {
                             if (Creature* lich = Unit::GetCreature(*me, uiLichKingGUID))
                             {
-                                lich->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_OOC_NOT_ATTACKABLE);
-                                lich->SetReactState(REACT_AGGRESSIVE);
+                                DoScriptText(SAY_INTRO_5_KING, lich);
 
-                                if (Unit* target = lich->FindNearestPlayer(100.0f))
-                                    lich->AI()->AttackStart(target);
+                                // If Arthas stills not in combat, find nearest player and attack him
+                                if(!lich->isInCombat())
+                                {
+                                    if (Unit* target = lich->FindNearestPlayer(100.0f))
+                                        lich->AI()->AttackStart(target);
+                                }
                             }
                             break;
                         }
@@ -1485,36 +1509,9 @@ class npc_tirion_icc : public CreatureScript
             if (!instance)
                 return false;
 
-            Player* unfriendlyPlayer = NULL;
-            const Map::PlayerList& PlayerList = creature->GetMap()->GetPlayers();
-
-            if (!PlayerList.isEmpty())
-                for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
-                    if (Player* player = i->getSource())
-                        if (!creature->IsFriendlyTo(player))
-                        {
-                            unfriendlyPlayer = player;
-                            break;
-                        }
-
-            if (unfriendlyPlayer)
-            {
-                char buf[255] = {0};
-                sprintf(buf, "Sorry, but everyone in raid should have at least friendly reputation with the Argent Crusade to participate in the final battle. Player '%s' doesn't meet this requirement.", unfriendlyPlayer->GetName());
-                creature->MonsterSay(buf, LANG_UNIVERSAL, player->GetGUID());
-                return true;
-            }
-
             if (instance->GetBossState(DATA_THE_LICH_KING) == DONE)
             {
                 player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "The Lich King was already defeated here. Teleport me back to the Light's Hammer", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
-                player->SEND_GOSSIP_MENU(GOSSIP_MENU, creature->GetGUID());
-                return true;
-            }
-
-            if ((!player->GetGroup() || !player->GetGroup()->IsLeader(player->GetGUID())) && !player->isGameMaster())
-            {
-                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Sorry, I'm not the raid leader", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
                 player->SEND_GOSSIP_MENU(GOSSIP_MENU, creature->GetGUID());
                 return true;
             }
@@ -1529,9 +1526,6 @@ class npc_tirion_icc : public CreatureScript
         {
             switch (uiAction)
             {
-                case GOSSIP_ACTION_INFO_DEF + 2:
-                    creature->MonsterSay("OK, I'll wait for raid leader", LANG_UNIVERSAL, player->GetGUID());
-                    break;
                 case GOSSIP_ACTION_INFO_DEF + 4:
                     creature->CastSpell(player, LIGHT_S_HAMMER_TELEPORT, true);
                     break;
