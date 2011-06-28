@@ -1226,9 +1226,11 @@ class boss_the_lich_king : public CreatureScript
 
             void PauseForSummoning(bool on)
             {
-                SetCombatMovement(!on);
                 imSummoning = on;
-                if(!on)
+
+                if(on)
+                    me->GetMotionMaster()->MoveIdle();
+                else
                     me->GetMotionMaster()->MoveChase(me->getVictim());
             }
         private:
