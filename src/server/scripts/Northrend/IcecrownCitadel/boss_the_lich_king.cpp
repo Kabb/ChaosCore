@@ -1457,7 +1457,7 @@ class npc_tirion_icc : public CreatureScript
                             me->RemoveUnitMovementFlag(MOVEMENTFLAG_WALKING);
                             me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_ONESHOT_NONE);
                             me->GetMotionMaster()->MovePoint(0, MovePos[3]);
-                            uiIntroTimer = 500;
+                            uiIntroTimer = 750;
                             break;
                         case 11:
                             // Arthas freezes Tirion
