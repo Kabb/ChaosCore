@@ -1363,7 +1363,7 @@ class npc_tirion_icc : public CreatureScript
                 if (!bIntro || !uiLichKingGUID)
                     return;
 
-                if (uiStage > 11)
+                if (uiStage > 12)
                     return;
 
                 if (uiIntroTimer <= diff)
@@ -1405,17 +1405,15 @@ class npc_tirion_icc : public CreatureScript
                                 lich->SetUnitMovementFlags(MOVEMENTFLAG_WALKING);
                                 lich->GetMotionMaster()->MovePoint(POINT_START_EVENT_1, MovePos[0]);
                             }
-                            uiIntroTimer = 15000;
+                            uiIntroTimer = 13500;
                             break;
                         }
                         case 5:
                         {
                             // Arthas has reached bottom of stairs, Tirion talks
                             if (Creature* lich = Unit::GetCreature(*me, uiLichKingGUID))
-                            {
-                                lich->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_ONESHOT_NONE);
                                 me->SetUInt64Value(UNIT_FIELD_TARGET, lich->GetGUID());
-                            }
+
                             DoScriptText(SAY_INTRO_2_TIRION, me);
                             uiIntroTimer = 8000;
                             break;
@@ -1457,12 +1455,15 @@ class npc_tirion_icc : public CreatureScript
                             me->RemoveUnitMovementFlag(MOVEMENTFLAG_WALKING);
                             me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_ONESHOT_NONE);
                             me->GetMotionMaster()->MovePoint(0, MovePos[3]);
-                            uiIntroTimer = 750;
+                            uiIntroTimer = 500;
                             break;
                         case 11:
                             // Arthas freezes Tirion
                             if(Creature* lich = Unit::GetCreature(*me, uiLichKingGUID))
+                            {
                                 lich->CastSpell(me, SPELL_ICEBLOCK_TRIGGER, true);
+                                me->SetFacingToObject(lich);
+                            }
                             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
 
                             // From here, Arthas is attackable
