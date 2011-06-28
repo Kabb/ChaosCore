@@ -1056,8 +1056,8 @@ class boss_the_lich_king : public CreatureScript
                                 break;
                             }
                             case 2:
-                                DoCast(me, SPELL_FURY_OF_FROSTMOURNE_NORES);
                                 DoCast(me, SPELL_FURY_OF_FROSTMOURNE);
+								DoCast(me, SPELL_FURY_OF_FROSTMOURNE_NORES);
                                 uiEndingTimer = 11000;
                                 break;
                             case 3:
@@ -1074,7 +1074,7 @@ class boss_the_lich_king : public CreatureScript
                                 break;
                             case 6:
                                 DoScriptText(SAY_ENDING_3_KING, me);
-                                //DoCast(me, SPELL_RAISE_DEAD);
+                                DoCast(me, SPELL_RAISE_DEAD);
                                 me->HandleEmoteCommand(EMOTE_ONESHOT_LAUGH);
                                 uiEndingTimer = 28000;
                                 break;
