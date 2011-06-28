@@ -412,6 +412,12 @@ class boss_the_lich_king : public CreatureScript
                 {
                     furyOfFrostmournenores->EffectRadiusIndex[0] = 22;
                 }
+                if (SpellEntry* riseDead = GET_SPELL(SPELL_RAISE_DEAD))
+                {
+                    riseDead->EffectRadiusIndex[0] = 22;
+                    riseDead->EffectRadiusIndex[1] = 22;
+                    riseDead->EffectAmplitude[0] = 50000;
+                }
                 if (SpellEntry* massResurrection = GET_SPELL(SPELL_REVIVE))
                 {
                     massResurrection->EffectRadiusIndex[0] = 4;
