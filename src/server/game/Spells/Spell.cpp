@@ -2466,7 +2466,7 @@ void Spell::SelectEffectTargets(uint32 i, uint32 cur)
                 else if (m_spellInfo->Id == 72754 || m_spellInfo->Id == 73708 || m_spellInfo->Id == 73709 || m_spellInfo->Id == 73710)
                     radius = 200.0f;
                 //Lich King's Fury of the Frostmourne, Play Movie and Rise Dead
-                else if (m_spellInfo->Id == 72350 || m_spellInfo->Id == 73159 || m_spellInfo->Id == 71769)
+                else if (m_spellInfo->Id == 72350 || m_spellInfo->Id == 73159 || m_spellInfo->Id == 71769 ||  m_spellInfo->Id == 72376)
                     radius = 200.0f;
                 radius = GetSpellRadius(m_spellInfo, i, false);
                 targetType = SPELL_TARGETS_ENEMY;
