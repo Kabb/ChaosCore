@@ -3688,7 +3688,15 @@ class at_icecrowncitadel_frozen_throne : public AreaTriggerScript
                 if(instance->GetBossState(DATA_PROFESSOR_PUTRICIDE) == DONE &&
                     instance->GetBossState(DATA_BLOOD_QUEEN_LANA_THEL) == DONE &&
                     instance->GetBossState(DATA_SINDRAGOSA) == DONE)
-                        return true;
+                {
+                    //Preload the Lich King's platform before teleporting player to there
+
+                    player->GetMap()->LoadGrid(530.3f, -2122.67f);
+                    player->CastSpell(player, FROZEN_THRONE_TELEPORT, true);
+
+                    //Give him 2 tries, just in case if player will fall through the ground
+                    TeleportPlayerToFrozenThrone(player);
+                }
             }
             return false;
         }
