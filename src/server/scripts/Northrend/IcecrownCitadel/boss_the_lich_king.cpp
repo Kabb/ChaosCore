@@ -3670,6 +3670,30 @@ class spell_lich_king_harvest_soul : public SpellScriptLoader
         }
 };
 
+class at_icecrowncitadel_frozen_throne : public AreaTriggerScript
+{
+    public:
+
+        at_icecrowncitadel_frozen_throne()
+            : AreaTriggerScript("at_icecrowncitadel_frozen_throne") {}
+
+        bool OnTrigger(Player* player, AreaTriggerEntry const* trigger)
+        {
+            if (player->isGameMaster())
+                return false;
+
+            InstanceScript* instance = player->GetInstanceScript();
+            if (instance)
+            {
+                if(instance->GetBossState(DATA_PROFESSOR_PUTRICIDE) == DONE &&
+                    instance->GetBossState(DATA_BLOOD_QUEEN_LANA_THEL) == DONE &&
+                    instance->GetBossState(DATA_SINDRAGOSA) == DONE)
+                        return true;
+            }
+            return false;
+        }
+};
+
 void AddSC_boss_lichking()
 {
     new boss_the_lich_king();
@@ -3701,4 +3725,6 @@ void AddSC_boss_lichking()
     new spell_lich_king_defile();
     new spell_lich_king_tirion_mass_resurrection();
     new spell_lich_king_harvest_soul();
+
+    new at_icecrowncitadel_frozen_throne();
 }
