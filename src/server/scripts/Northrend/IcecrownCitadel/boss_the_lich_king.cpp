@@ -470,6 +470,7 @@ class boss_the_lich_king : public CreatureScript
                 uiTirionGUID = 0;
                 isSwitching = false;
                 imSummoning = false;
+                bCastedQuake = false;
                 events.Reset();
                 events.SetPhase(PHASE_1);
                 events.ScheduleEvent(EVENT_BERSERK, 900000, PHASE_1);
@@ -694,6 +695,7 @@ class boss_the_lich_king : public CreatureScript
                     }
                     case ACTION_CANCEL_ALL_TRANSITION_EVENTS:
                     {
+                        bCastedQuake = true;
                         events.CancelEvent(EVENT_PAIN_AND_SUFFERING);
                         events.CancelEvent(EVENT_SUMMON_ICE_SPHERE);
                         events.CancelEvent(EVENT_SUMMON_RAGING_SPIRIT);
@@ -786,6 +788,13 @@ class boss_the_lich_king : public CreatureScript
 
                 if (me->HasUnitState(UNIT_STAT_CASTING))
                     return;
+
+                if(bCastedQuake)
+                {
+                    //Just casted quake, so remains kneed (bug fix)
+                    bCastedQuake = false;
+                    me->SetStandState(UNIT_STAND_STATE_STAND);
+                }
 
                 while (uint32 eventId = events.ExecuteEvent())
                 {
@@ -1259,6 +1268,7 @@ class boss_the_lich_king : public CreatureScript
             uint64 uiTirionGUID;
             bool isSwitching;
             bool imSummoning;
+            bool bCastedQuake;
             SummonList summons;
             EventMap events;
         };
