@@ -698,8 +698,6 @@ class boss_the_lich_king : public CreatureScript
                         events.CancelEvent(EVENT_SUMMON_ICE_SPHERE);
                         events.CancelEvent(EVENT_SUMMON_RAGING_SPIRIT);
                         events.CancelEvent(EVENT_TRANSITION_PHASE_END);
-                        //Correct StandState after quake
-                        events.ScheduleEvent(EVENT_DEFAULT_STAND, 7000);
                         break;
                     }
                     case ACTION_PHASE_SWITCH_1:
@@ -910,11 +908,6 @@ class boss_the_lich_king : public CreatureScript
                                     events.Reset();
                                     DoScriptText(SAY_BERSERK, me);
                                     DoCast(me, SPELL_BERSERK2);
-                                    break;
-                                }
-                                case EVENT_DEFAULT_STAND:
-                                {
-                                    me->SetStandState(UNIT_STAND_STATE_STAND);
                                     break;
                                 }
                             }
