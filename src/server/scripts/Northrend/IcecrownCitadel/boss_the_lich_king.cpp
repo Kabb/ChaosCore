@@ -1074,6 +1074,8 @@ class boss_the_lich_king : public CreatureScript
                                 uiEndingTimer = 24000;
                                 break;
                             case 4:
+                                if (Creature* tirion = Unit::GetCreature(*me, uiTirionGUID))
+                                    me->SetFacingToObject(tirion);
                                 DoScriptText(SAY_ENDING_2_KING, me);
                                 uiEndingTimer = 25000;
                                 break;
@@ -1083,8 +1085,9 @@ class boss_the_lich_king : public CreatureScript
                                 break;
                             case 6:
                                 DoScriptText(SAY_ENDING_3_KING, me);
-                                DoCast(me, SPELL_RAISE_DEAD);
-                                me->HandleEmoteCommand(EMOTE_ONESHOT_LAUGH);
+                                //DoCast(me, SPELL_RAISE_DEAD);
+                                me->SetStandState(468); // Rising the sword
+                                //me->HandleEmoteCommand(EMOTE_ONESHOT_LAUGH);
                                 uiEndingTimer = 28000;
                                 break;
                             case 7:
@@ -1116,7 +1119,7 @@ class boss_the_lich_king : public CreatureScript
                             {
                                 if (uiTirionGUID)
                                     if (Creature* tirion = Unit::GetCreature(*me, uiTirionGUID))
-                                        tirion->GetMotionMaster()->MovePoint(0, MovePos[3]);
+                                        tirion->GetMotionMaster()->MovePoint(0, MovePos[2]);
 
                                 uiEndingTimer = 2000;
                                 break;
@@ -1127,17 +1130,21 @@ class boss_the_lich_king : public CreatureScript
                                 {
                                     if (Creature* tirion = Unit::GetCreature(*me, uiTirionGUID))
                                     {
+                                        tirion->SetHomePosition(517.482910f, -2124.905762f, 1040.861328f, 0.0f);
                                         tirion->GetMotionMaster()->MoveJump(517.482910f, -2124.905762f, 1040.861328f, 10.0f, 15.0f);
                                         tirion->SetUInt32Value(UNIT_NPC_EMOTESTATE, 375);
                                     }
                                 }
-                                me->RemoveAura(SPELL_RAISE_DEAD);
+                                //me->RemoveAura(SPELL_RAISE_DEAD);
+                                me->SetStandState(417);
+                                me->HandleEmoteCommand(416);
                                 me->CastSpell(me, SPELL_BOOM_VISUAL, false);
                                 uiEndingTimer = 1000;
                                 break;
                             }
                             case 12:
                             {
+                                me->CastSpell(me, SPELL_DROP_FROSTMOURNE, false);
                                 if (Creature* tirion = Unit::GetCreature(*me, uiTirionGUID))
                                     tirion->SetFacingToObject(me);
                                 uiEndingTimer = 1000;
