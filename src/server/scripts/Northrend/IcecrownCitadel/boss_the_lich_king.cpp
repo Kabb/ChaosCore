@@ -147,6 +147,7 @@ enum eEvents
     EVENT_CHECK_SPIRIT_WARDEN_HEALTH          = 38,
 
     EVENT_RESTART_COMBAT_MOVEMENT             = 39,
+    EVENT_DEFAULT_STAND                       = 40,
 };
 
 enum Spells
@@ -912,11 +913,6 @@ class boss_the_lich_king : public CreatureScript
                                     DoCast(me, SPELL_BERSERK2);
                                     break;
                                 }
-                                case EVENT_DEFAULT_STAND:
-                                {
-                                    me->SetStandState(UNIT_STAND_STATE_STAND);
-                                    break;
-                                }
                             }
                             break;
                         }
@@ -963,6 +959,11 @@ class boss_the_lich_king : public CreatureScript
                                 {
                                     DoScriptText(SAY_BERSERK, me);
                                     DoCast(me, SPELL_BERSERK2);
+                                    break;
+                                }
+                                case EVENT_DEFAULT_STAND:
+                                {
+                                    me->SetStandState(UNIT_STAND_STATE_STAND);
                                     break;
                                 }
                             }
@@ -1016,6 +1017,11 @@ class boss_the_lich_king : public CreatureScript
                                 case EVENT_RESTART_COMBAT_MOVEMENT:
                                 {
                                     PauseForSummoning(false);
+                                    break;
+                                }
+                                case EVENT_DEFAULT_STAND:
+                                {
+                                    me->SetStandState(UNIT_STAND_STATE_STAND);
                                     break;
                                 }
                             }
