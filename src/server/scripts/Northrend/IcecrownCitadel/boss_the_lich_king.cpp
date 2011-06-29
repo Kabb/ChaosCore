@@ -1085,9 +1085,10 @@ class boss_the_lich_king : public CreatureScript
                                 break;
                             case 6:
                                 DoScriptText(SAY_ENDING_3_KING, me);
+                                if (Creature* trigger = me->FindNearestCreature(37882, 50.0f, true))
+                                    me->SetFacingToObject(trigger);
                                 //DoCast(me, SPELL_RAISE_DEAD);
                                 me->SetUInt32Value(UNIT_NPC_EMOTESTATE, 468); // Rising the sword
-                                //me->HandleEmoteCommand(EMOTE_ONESHOT_LAUGH);
                                 uiEndingTimer = 28000;
                                 break;
                             case 7:
@@ -1136,32 +1137,32 @@ class boss_the_lich_king : public CreatureScript
                                     }
                                 }
                                 //me->RemoveAura(SPELL_RAISE_DEAD);
-                                me->SetUInt32Value(UNIT_NPC_EMOTESTATE, 417);
-                                me->HandleEmoteCommand(416);
-                                me->CastSpell(me, SPELL_BOOM_VISUAL, false);
-                                uiEndingTimer = 2000;
+
+                                uiEndingTimer = 1000;
                                 break;
                             }
                             case 12:
                             {
+                                me->SetUInt32Value(UNIT_NPC_EMOTESTATE, 417);
+                                me->HandleEmoteCommand(416);
+                                me->CastSpell(me, SPELL_BOOM_VISUAL, false);
+                                uiEndingTimer = 1000;
+                                break;
+                            }
+                            case 13:
                                 me->CastSpell(me, SPELL_DROP_FROSTMOURNE, false);
                                 if (Creature* tirion = Unit::GetCreature(*me, uiTirionGUID))
                                     tirion->SetFacingToObject(me);
                                 uiEndingTimer = 1000;
                                 break;
-                            }
-                            case 13:
-                                DoCast(me, SPELL_SOUL_EFFECT);
+                            case 14:
+                                me->SetUInt32Value(UNIT_NPC_EMOTESTATE, 417);
                                 DoPlaySoundToSet(me, SOUND_ENDING_7_KING);
                                 uiEndingTimer = 1000;
                                 break;
-                            case 14:
+                            case 15:
                                 SetEquipmentSlots(false, EQUIP_UNEQUIP, EQUIP_NO_CHANGE, EQUIP_NO_CHANGE);
                                 DoScriptText(SAY_ENDING_6_KING, me);
-                                uiEndingTimer = 1000;
-                                break;
-                            case 15:
-                                //DoCast(me, SPELL_SUMMON_FROSTMOURNE_TRIGGER);
                                 uiEndingTimer = 2000;
                                 break;
                             case 16:
@@ -1216,17 +1217,17 @@ class boss_the_lich_king : public CreatureScript
                             case 21:
                             {
                                 DoScriptText(SAY_ENDING_12_KING, me);
-                                me->GetMotionMaster()->MovePoint(0, MovePos[6]);
+                                //me->GetMotionMaster()->MovePoint(0, MovePos[6]);
 
                                 me->SetUInt32Value(UNIT_NPC_EMOTESTATE, 0);
-                                me->SetReactState(REACT_AGGRESSIVE);
+                                //me->SetReactState(REACT_AGGRESSIVE);
 								
                                 if (uiTirionGUID)
                                     if (Creature* tirion = Unit::GetCreature(*me, uiTirionGUID))
-                                        tirion->AI()->AttackStart(me);
+                                        //tirion->AI()->AttackStart(me);
 
                                 if (Creature* father = me->FindNearestCreature(NPC_TERENAS_MENETHIL, 25.0f, true))
-                                    father->AI()->AttackStart(me);
+                                    //father->AI()->AttackStart(me);
 
                                 uiEndingTimer = 10000;
                                 break;
