@@ -1255,6 +1255,14 @@ class boss_the_lich_king : public CreatureScript
                 else
                     me->GetMotionMaster()->MoveChase(me->getVictim());
             }
+
+			// JUST FOR TESTING PROPUSES!!!!
+            void SpellHit(Unit* /*caster*/, const SpellEntry * spell)
+            {
+                if (spell->Id == 72400)
+                    events.SetPhase(PHASE_6_ENDING);
+            }
+
         private:
             InstanceScript* instance;
             uint8 uiStage;
