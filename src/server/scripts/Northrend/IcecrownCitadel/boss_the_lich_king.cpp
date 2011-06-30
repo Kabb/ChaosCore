@@ -522,6 +522,8 @@ class boss_the_lich_king : public CreatureScript
                 if (!instance)
                     return;
 
+                me->SetFlying(false);
+
                 instance->SetBossState(DATA_THE_LICH_KING, DONE);
 				instance->SetData(DATA_THE_LICH_KING, DONE);
 				//instance->DoCompleteAchievement(RAID_MODE<uint32>(ACHIEV_THE_FROZEN_THRONE_10, ACHIEV_BANE_OF_THE_FALLEN_KING, ACHIEV_THE_FROZEN_THRONE_25, ACHIEV_THE_LIGHT_OF_DAWN));
@@ -545,6 +547,7 @@ class boss_the_lich_king : public CreatureScript
 
                 if (Creature* tirion = Unit::GetCreature(*me, uiTirionGUID))
                 {
+                    tirion->SetStandState(UNIT_STAND_STATE_STAND);
                     tirion->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
                     tirion->SetReactState(REACT_PASSIVE);
                     tirion->RemoveAllAuras();
@@ -1146,14 +1149,15 @@ class boss_the_lich_king : public CreatureScript
                                 me->SetUInt32Value(UNIT_NPC_EMOTESTATE, 417);
                                 me->HandleEmoteCommand(416);
                                 me->CastSpell(me, SPELL_BOOM_VISUAL, false);
-                                uiEndingTimer = 1000;
+                                uiEndingTimer = 500;
                                 break;
                             }
                             case 13:
                                 me->CastSpell(me, SPELL_DROP_FROSTMOURNE, false);
+                                SetEquipmentSlots(false, EQUIP_UNEQUIP, EQUIP_NO_CHANGE, EQUIP_NO_CHANGE);
                                 if (Creature* tirion = Unit::GetCreature(*me, uiTirionGUID))
                                     tirion->SetFacingToObject(me);
-                                uiEndingTimer = 1000;
+                                uiEndingTimer = 500;
                                 break;
                             case 14:
                                 me->SetUInt32Value(UNIT_NPC_EMOTESTATE, 417);
@@ -1161,7 +1165,6 @@ class boss_the_lich_king : public CreatureScript
                                 uiEndingTimer = 1000;
                                 break;
                             case 15:
-                                SetEquipmentSlots(false, EQUIP_UNEQUIP, EQUIP_NO_CHANGE, EQUIP_NO_CHANGE);
                                 DoScriptText(SAY_ENDING_6_KING, me);
                                 uiEndingTimer = 2000;
                                 break;
@@ -1217,18 +1220,12 @@ class boss_the_lich_king : public CreatureScript
                             case 21:
                             {
                                 DoScriptText(SAY_ENDING_12_KING, me);
-                                //me->GetMotionMaster()->MovePoint(0, MovePos[6]);
-
-                                me->SetUInt32Value(UNIT_NPC_EMOTESTATE, 0);
-                                //me->SetReactState(REACT_AGGRESSIVE);
-								
                                 if (uiTirionGUID)
                                     if (Creature* tirion = Unit::GetCreature(*me, uiTirionGUID))
-                                        //tirion->AI()->AttackStart(me);
+                                        tirion->GetMotionMaster()->MoveChase(me, 2.0f, 1.5f);
 
                                 if (Creature* father = me->FindNearestCreature(NPC_TERENAS_MENETHIL, 25.0f, true))
-                                    //father->AI()->AttackStart(me);
-
+                                    father->GetMotionMaster()->MoveChase(me, 2.0f, 2.0f);
                                 uiEndingTimer = 10000;
                                 break;
                             }
@@ -1494,7 +1491,7 @@ class npc_tirion_icc : public CreatureScript
                             me->RemoveUnitMovementFlag(MOVEMENTFLAG_WALKING);
                             me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_ONESHOT_NONE);
                             me->GetMotionMaster()->MovePoint(0, MovePos[3]);
-                            uiIntroTimer = 750;
+                            uiIntroTimer = 1000;
                             break;
                         case 11:
                             // Arthas freezes Tirion
