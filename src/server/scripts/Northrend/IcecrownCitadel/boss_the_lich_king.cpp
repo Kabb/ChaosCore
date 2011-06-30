@@ -931,12 +931,9 @@ class boss_the_lich_king : public CreatureScript
                             {
                                 case EVENT_SUMMON_VAL_KYR_SHADOWGUARD:
                                 {
-									if (GetDifficulty() == RAID_DIFFICULTY_10MAN_NORMAL || RAID_DIFFICULTY_10MAN_HEROIC)
-									{
 										DoScriptText(SAY_SUMMON_VALKYR, me);
 										DoCast(me, SPELL_SUMMON_VALKYR);
 										events.ScheduleEvent(EVENT_SUMMON_VAL_KYR_SHADOWGUARD, urand(40000, 45000), 0, PHASE_3);
-									}
                                     break;
                                 }
                                 case EVENT_DEFILE:
@@ -1070,7 +1067,7 @@ class boss_the_lich_king : public CreatureScript
                             case 2:
                                 DoCast(me, SPELL_FURY_OF_FROSTMOURNE);
 								DoCast(me, SPELL_FURY_OF_FROSTMOURNE_NORES);
-                                uiEndingTimer = 11000;
+                                uiEndingTimer = 12000;
                                 break;
                             case 3:
                                 DoScriptText(SAY_ENDING_1_KING, me);
