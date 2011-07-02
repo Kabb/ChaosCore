@@ -319,6 +319,7 @@ struct Position MovePos[]=
     {508.989f, -2124.55f, 1045.356f, 0.0f}, //boss levitates above the frostmourne
     {505.212f, -2124.35f, 1040.94f, 3.14159f},
     {491.759f, -2124.86f, 1040.86f, 0.0f},  // tirion talk position
+    {517.482910f, -2124.905762f, 1040.861328f, 0.0f}, // Jump position
 };
 struct Position FrostmourneRoom[] = 
 {
@@ -1148,8 +1149,8 @@ class boss_the_lich_king : public CreatureScript
                                 {
                                     if (Creature* tirion = Unit::GetCreature(*me, uiTirionGUID))
                                     {
-                                        tirion->GetMotionMaster()->MoveJump(517.482910f, -2124.905762f, 1040.861328f, 10.0f, 15.0f);
-                                        tirion->SetPosition(517.482910f, -2124.905762f, 1040.861328f, 0.0f);
+                                        tirion->GetMotionMaster()->MoveJump(MovePos[10].GetPositionX(), MovePos[10].GetPositionY(), MovePos[10].GetPositionZ(), 10.0f, 15.0f);
+                                        tirion->SetPosition(MovePos[10]);
                                     }
                                 }
                                 me->RemoveAura(SPELL_RAISE_DEAD);
@@ -1161,8 +1162,10 @@ class boss_the_lich_king : public CreatureScript
                             {
                                 if (uiTirionGUID)
                                     if (Creature* tirion = Unit::GetCreature(*me, uiTirionGUID))
-                                        tirion->HandleEmoteCommand(EMOTE_ONESHOT_ATTACK1H);
+                                        tirion->HandleEmoteCommand(EMOTE_ONESHOT_ATTACK2HTIGHT);
 
+                                //Equip broken Frostmourne
+                                SetEquipmentSlots(false, 50840, EQUIP_NO_CHANGE, EQUIP_NO_CHANGE);
                                 me->CastSpell(me, SPELL_BOOM_VISUAL, false);
                                 me->HandleEmoteCommand(EMOTE_STATE_CUSTOM_SPELL_01);
                                 uiEndingTimer = 4000;
