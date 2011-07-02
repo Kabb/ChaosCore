@@ -1150,7 +1150,7 @@ class boss_the_lich_king : public CreatureScript
                                     if (Creature* tirion = Unit::GetCreature(*me, uiTirionGUID))
                                     {
                                         tirion->GetMotionMaster()->MoveJump(517.482910f, -2124.905762f, 1040.861328f, 10.0f, 15.0f);
-                                        tirion->SetPosition(517.482910f, -2124.905762f, 1040.861328f, 0.0f)
+                                        tirion->SetPosition(517.482910f, -2124.905762f, 1040.861328f, 0.0f);
                                     }
                                 }
                                 me->RemoveAura(SPELL_RAISE_DEAD);
