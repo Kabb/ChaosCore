@@ -1235,10 +1235,13 @@ class boss_the_lich_king : public CreatureScript
                                 DoScriptText(SAY_ENDING_12_KING, me);
                                 if (uiTirionGUID)
                                     if (Creature* tirion = Unit::GetCreature(*me, uiTirionGUID))
-                                        tirion->GetMotionMaster()->MoveChase(me, 2.0f, 1.5f);
+                                        if(Creature* frostmourne = me->FindNearestCreature(NPC_FROSTMOURNE_TRIGGER, 25.0f, true))
+                                            tirion->GetMotionMaster()->MoveChase(frostmourne, 2.0f, 1.5f);
 
                                 if (Creature* father = me->FindNearestCreature(NPC_TERENAS_MENETHIL, 25.0f, true))
-                                    father->GetMotionMaster()->MoveChase(me, 2.0f, 2.0f);
+                                    if(Creature* frostmourne = me->FindNearestCreature(NPC_FROSTMOURNE_TRIGGER, 25.0f, true))
+                                        father->GetMotionMaster()->MoveChase(me, 2.0f, 2.0f);
+
                                 uiEndingTimer = 10000;
                                 break;
                             }
