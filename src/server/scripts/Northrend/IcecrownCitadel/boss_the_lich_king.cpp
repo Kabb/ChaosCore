@@ -1202,7 +1202,7 @@ class boss_the_lich_king : public CreatureScript
                             {
                                 if (Creature* father = me->FindNearestCreature(NPC_TERENAS_MENETHIL, 25.0f, true))
                                 {
-                                    DoScriptTextSAY_ENDING_9_FATHER, father);
+                                    DoScriptText(SAY_ENDING_9_FATHER, father);
                                     father->SetFacingToObject(me);
                                 }
                                 uiEndingTimer = 3000;
