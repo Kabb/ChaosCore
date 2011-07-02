@@ -1070,7 +1070,7 @@ class boss_the_lich_king : public CreatureScript
                             {
                                 DoCast(me, SPELL_FURY_OF_FROSTMOURNE);
                                 for (TPlayerList::iterator it = GetPlayersInTheMap(me->GetMap()).begin(); it != GetPlayersInTheMap(me->GetMap()).end(); ++it)
-                                    me->AddAura(SPELL_FURY_OF_FROSTMOURNE_NORES, (*it));
+                                    (*it)->AddAura(SPELL_FURY_OF_FROSTMOURNE_NORES, (*it));
                                 uiEndingTimer = 12000;
                                 break;
                             }
