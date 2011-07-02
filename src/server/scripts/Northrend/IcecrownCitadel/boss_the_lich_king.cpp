@@ -3685,38 +3685,6 @@ class spell_lich_king_harvest_soul : public SpellScriptLoader
         }
 };
 
-class at_icecrowncitadel_frozen_throne : public AreaTriggerScript
-{
-    public:
-
-        at_icecrowncitadel_frozen_throne()
-            : AreaTriggerScript("at_icecrowncitadel_frozen_throne") {}
-
-        bool OnTrigger(Player* player, AreaTriggerEntry const* trigger)
-        {
-            if (player->isGameMaster())
-                return false;
-
-            InstanceScript* instance = player->GetInstanceScript();
-            if (instance)
-            {
-                if(instance->GetBossState(DATA_PROFESSOR_PUTRICIDE) == DONE &&
-                    instance->GetBossState(DATA_BLOOD_QUEEN_LANA_THEL) == DONE &&
-                    instance->GetBossState(DATA_SINDRAGOSA) == DONE)
-                {
-                    //Preload the Lich King's platform before teleporting player to there
-
-                    player->GetMap()->LoadGrid(530.3f, -2122.67f);
-                    player->CastSpell(player, FROZEN_THRONE_TELEPORT, true);
-
-                    //Give him 2 tries, just in case if player will fall through the ground
-                    TeleportPlayerToFrozenThrone(player);
-                }
-            }
-            return false;
-        }
-};
-
 void AddSC_boss_lichking()
 {
     new boss_the_lich_king();
@@ -3748,6 +3716,4 @@ void AddSC_boss_lichking()
     new spell_lich_king_defile();
     new spell_lich_king_tirion_mass_resurrection();
     new spell_lich_king_harvest_soul();
-
-    new at_icecrowncitadel_frozen_throne();
 }
