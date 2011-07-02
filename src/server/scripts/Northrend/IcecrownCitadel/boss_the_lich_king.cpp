@@ -547,7 +547,7 @@ class boss_the_lich_king : public CreatureScript
 
                 if (Creature* tirion = Unit::GetCreature(*me, uiTirionGUID))
                 {
-                    tirion->SetStandState(UNIT_STAND_STATE_STAND);
+                    tirion->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_NONE);
                     tirion->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
                     tirion->SetReactState(REACT_PASSIVE);
                     tirion->RemoveAllAuras();
@@ -1137,7 +1137,6 @@ class boss_the_lich_king : public CreatureScript
                                     {
                                         tirion->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_READY2H);
                                         tirion->GetMotionMaster()->MovePoint(0, MovePos[2]);
-                                        me->SetFacingToObject(me);
                                     }
 
                                 uiEndingTimer = 3000;
@@ -1166,7 +1165,7 @@ class boss_the_lich_king : public CreatureScript
 
                                 me->CastSpell(me, SPELL_BOOM_VISUAL, false);
                                 me->HandleEmoteCommand(EMOTE_STATE_CUSTOM_SPELL_01);
-                                uiEndingTimer = 5000;
+                                uiEndingTimer = 4000;
                                 break;
                             }
                             case 13:
@@ -1192,15 +1191,15 @@ class boss_the_lich_king : public CreatureScript
                             {
                                 DoScriptText(SAY_ENDING_6_KING, me);
                                 uiEndingTimer = 2000;
-                                me->SetUInt32Value(UNIT_NPC_EMOTESTATE, 473);
                                 break;
                             }
                             case 16:
                             {
+                                me->SetUInt32Value(UNIT_NPC_EMOTESTATE, 473);
                                 if (Creature* frostmourne = me->FindNearestCreature(NPC_FROSTMOURNE_TRIGGER, 25.0f, true))
                                 {
-                                    me->SetFlying(true);
-                                    me->GetMotionMaster()->MovePoint(0, frostmourne->GetPositionX(),frostmourne->GetPositionY(), frostmourne->GetPositionZ() + 5.0f);
+                                    //me->SetFlying(true);
+                                    me->GetMotionMaster()->MoveJump(frostmourne->GetPositionX(),frostmourne->GetPositionY(), frostmourne->GetPositionZ(), 0.5f,  1.0f);
                                 }        
                                 uiEndingTimer = 5000;
                                 break;
@@ -1229,7 +1228,7 @@ class boss_the_lich_king : public CreatureScript
                                     DoScriptText(SAY_ENDING_9_FATHER, father);
                                     father->SetFacingToObject(me);
                                 }
-                                uiEndingTimer = 10000;
+                                uiEndingTimer = 11000;
                                 break;
                             }
                             case 20:
@@ -1269,7 +1268,7 @@ class boss_the_lich_king : public CreatureScript
                                 if (Creature* father = me->FindNearestCreature(NPC_TERENAS_MENETHIL, 25.0f, true))
                                 {
                                     if(Creature* frostmourne = me->FindNearestCreature(NPC_FROSTMOURNE_TRIGGER, 25.0f, true))
-                                        father->GetMotionMaster()->MoveChase(frostmourne, 2.0f, 2.0f);
+                                        father->GetMotionMaster()->MoveChase(frostmourne, 3.0f, 0.0f);
                                     father->SetUInt64Value(UNIT_FIELD_TARGET, me->GetGUID());
                                 }
 
