@@ -403,6 +403,7 @@ class boss_the_lich_king : public CreatureScript
 
                 if (SpellEntry* furyOfFrostmourne = GET_SPELL(SPELL_FURY_OF_FROSTMOURNE))
                 {
+                    furyOfFrostmourne->Effect[0] = SPELL_EFFECT_DUMMY;
                     furyOfFrostmourne->Effect[1] = SPELL_EFFECT_INSTAKILL;
                     furyOfFrostmourne->EffectRadiusIndex[0] = 22;
                     furyOfFrostmourne->EffectRadiusIndex[1] = 22;
@@ -1069,8 +1070,6 @@ class boss_the_lich_king : public CreatureScript
                             case 2:
                             {
                                 DoCast(me, SPELL_FURY_OF_FROSTMOURNE);
-                                for (TPlayerList::iterator it = GetPlayersInTheMap(me->GetMap()).begin(); it != GetPlayersInTheMap(me->GetMap()).end(); ++it)
-                                    (*it)->AddAura(SPELL_FURY_OF_FROSTMOURNE_NORES, (*it));
                                 uiEndingTimer = 12000;
                                 break;
                             }
@@ -3744,6 +3743,42 @@ class spell_lich_king_harvest_soul : public SpellScriptLoader
         }
 };
 
+class spell_lich_king_fury_of_frostmourne : public SpellScriptLoader
+{
+    public:
+        spell_lich_king_fury_of_frostmourne() : SpellScriptLoader("spell_lich_king_fury_of_frostmourne") { }
+
+        class spell_lich_king_fury_of_frostmourneSpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_lich_king_fury_of_frostmourneSpellScript);
+
+            // function called on server startup
+            // checks if script has data required for it to work
+            bool Validate(SpellEntry const* /*spellEntry*/)
+            {
+                if (!sSpellStore.LookupEntry(SPELL_FURY_OF_FROSTMOURNE_NORES))
+                    return false;
+                return true;
+            }
+
+            void HandleDummy(SpellEffIndex /*effIndex*/)
+            {
+                if (Unit* target = GetHitUnit())
+                    GetCaster()->AddAura(SPELL_FURY_OF_FROSTMOURNE_NORES, target);
+            }
+
+            void Register()
+            {
+                OnEffect += SpellEffectFn(spell_lich_king_fury_of_frostmourneSpellScript::HandleDummy, EFFECT_0, SPELL_EFFECT_DUMMY);
+            }
+        };
+
+        SpellScript* GetSpellScript() const
+        {
+            return new spell_lich_king_fury_of_frostmourneSpellScript();
+        }
+};
+
 void AddSC_boss_lichking()
 {
     new boss_the_lich_king();
@@ -3775,4 +3810,5 @@ void AddSC_boss_lichking()
     new spell_lich_king_defile();
     new spell_lich_king_tirion_mass_resurrection();
     new spell_lich_king_harvest_soul();
+    new spell_lich_king_fury_of_frostmourne();
 }
