@@ -796,7 +796,7 @@ class boss_the_lich_king : public CreatureScript
                 {
                     //Just casted quake, so remains kneed (bug fix)
                     bCastedQuake = false;
-                    me->SetStandState(UNIT_STAND_STATE_STAND);
+                    me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_NONE);
                 }
 
                 while (uint32 eventId = events.ExecuteEvent())
