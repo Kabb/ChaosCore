@@ -194,8 +194,8 @@ enum ThorimChests
 {
     CACHE_OF_STORMS_10                          = 194312,
     CACHE_OF_STORMS_HARDMODE_10                 = 194313,
-    CACHE_OF_STORMS_25                          = 194315,
-    CACHE_OF_STORMS_HARDMODE_25                 = 194314
+    CACHE_OF_STORMS_25                          = 194314,
+    CACHE_OF_STORMS_HARDMODE_25                 = 194315
 };
 
 const Position Pos[7] =
@@ -331,31 +331,7 @@ public:
                 DoScriptText(RAND(SAY_SLAY_1,SAY_SLAY_2), me);
         }
 
-        void JustDied(Unit * /*victim*/)
-        {
-            DoScriptText(SAY_DEATH, me);
-            _JustDied();
-        
-            me->setFaction(35);
-        
-            if (instance)
-            {
-                // Kill credit
-                instance->DoUpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_BE_SPELL_TARGET, 64985);
-                // Lose Your Illusion
-                if (HardMode)
-                {
-                    instance->DoCompleteAchievement(ACHIEVEMENT_LOSE_ILLUSION);
-                    me->SummonGameObject(RAID_MODE(CACHE_OF_STORMS_HARDMODE_10, CACHE_OF_STORMS_HARDMODE_25), 2134.58f, -286.908f, 419.495f, 1.55988f, 0, 0, 1, 1, 604800);
-                }
-                else
-                {
-                    me->SummonGameObject(RAID_MODE(CACHE_OF_STORMS_10, CACHE_OF_STORMS_25), 2134.58f, -286.908f, 419.495f, 1.55988f, 0, 0, 1, 1, 604800);
-                }
-            }
-        }
-
-        void EnterCombat(Unit* /*pWho*/)
+        void EnterCombat(Unit* /*who*/)
         {
             DoScriptText(RAND(SAY_AGGRO_1, SAY_AGGRO_2), me);
             _EnterCombat();
@@ -519,9 +495,13 @@ public:
             if (phase == PHASE_1 && pKiller && instance)
             {
                 if (Creature* pRunicColossus = me->GetCreature(*me, instance->GetData64(DATA_RUNIC_COLOSSUS)))
+				{
                     if (pRunicColossus->isDead())
+					{
                         if (Creature* pRuneGiant = me->GetCreature(*me, instance->GetData64(DATA_RUNE_GIANT)))
+						{
                             if (pRuneGiant->isDead())
+							{
                                 if (me->IsWithinDistInMap(pKiller, 10.0f) && pKiller->ToPlayer())
                                 {
                                     DoScriptText(SAY_JUMPDOWN, me);
@@ -547,7 +527,40 @@ public:
                                     }
                                     else me->AddAura(SPELL_TOUCH_OF_DOMINION, me);
                                 }
+							}
+						}
+					}
+				}
             }
+			if (damage >= me->GetHealth() && instance)
+			{
+				damage = 0;
+				DoScriptText(SAY_DEATH, me);
+				me->SetReactState(REACT_PASSIVE);
+				me->RemoveAllAuras();
+				me->AttackStop();
+				me->setFaction(35);
+				me->DeleteThreatList();
+				me->CombatStop(true);
+				me->InterruptNonMeleeSpells(true);
+				me->StopMoving();
+				me->GetMotionMaster()->Clear();
+				me->GetMotionMaster()->MoveIdle();
+				me->DespawnOrUnsummon(7500);
+				// Kill credit
+				instance->DoUpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_BE_SPELL_TARGET, 64985);
+				// Lose Your Illusion
+				if (HardMode)
+				{
+					instance->DoCompleteAchievement(ACHIEVEMENT_LOSE_ILLUSION);
+					me->SummonGameObject(RAID_MODE(CACHE_OF_STORMS_HARDMODE_10, CACHE_OF_STORMS_HARDMODE_25), 2134.58f, -286.908f, 419.495f, 1.55988f, 0, 0, 1, 1, 604800);
+				}
+				else
+				{
+					me->SummonGameObject(RAID_MODE(CACHE_OF_STORMS_10, CACHE_OF_STORMS_25), 2134.58f, -286.908f, 419.495f, 1.55988f, 0, 0, 1, 1, 604800);
+				}
+				_JustDied();
+			}
         }
     };
 
@@ -559,16 +572,16 @@ class npc_thorim_pre_phase : public CreatureScript
 public:
     npc_thorim_pre_phase() : CreatureScript("npc_thorim_pre_phase") { }
 
-    CreatureAI* GetAI(Creature* pCreature) const
+    CreatureAI* GetAI(Creature* creature) const
     {
-        return new npc_thorim_pre_phaseAI (pCreature);
+        return new npc_thorim_pre_phaseAI (creature);
     }
 
     struct npc_thorim_pre_phaseAI : public ScriptedAI
     {
-        npc_thorim_pre_phaseAI(Creature *pCreature) : ScriptedAI(pCreature)
+        npc_thorim_pre_phaseAI(Creature *creature) : ScriptedAI(creature)
         {
-            pInstance = pCreature->GetInstanceScript();
+            pInstance = creature->GetInstanceScript();
             me->setFaction(14);
             for (uint8 i = 0; i < 6; ++i)
                 if (me->GetEntry() == PRE_PHASE_ADD[i])
@@ -653,16 +666,16 @@ class npc_thorim_arena_phase : public CreatureScript
 public:
     npc_thorim_arena_phase() : CreatureScript("npc_thorim_arena_phase") { }
 
-    CreatureAI* GetAI(Creature* pCreature) const
+    CreatureAI* GetAI(Creature* creature) const
     {
-        return new npc_thorim_arena_phaseAI (pCreature);
+        return new npc_thorim_arena_phaseAI (creature);
     }
 
     struct npc_thorim_arena_phaseAI : public ScriptedAI
     {
-        npc_thorim_arena_phaseAI(Creature* pCreature) : ScriptedAI(pCreature)
+        npc_thorim_arena_phaseAI(Creature* creature) : ScriptedAI(creature)
         {
-            pInstance = pCreature->GetInstanceScript();
+            pInstance = creature->GetInstanceScript();
             me->setFaction(14);
             for (uint8 i = 0; i < 7; ++i)
                 if (me->GetEntry() == ARENA_PHASE_ADD[i])
@@ -680,9 +693,9 @@ public:
         bool IsInArena;
         bool healer;
 
-        bool isOnSameSide(const Unit* pWho)
+        bool isOnSameSide(const Unit* who)
         {
-            return (IsInArena == IN_ARENA(pWho));
+            return (IsInArena == IN_ARENA(who));
         }
     
         void DamageTaken(Unit* attacker, uint32 &damage)
@@ -1005,7 +1018,7 @@ public:
             summons.Summon(summon);
         }
 
-        void EnterCombat(Unit* /*pWho*/)
+        void EnterCombat(Unit* /*who*/)
         {
             me->MonsterTextEmote(EMOTE_MIGHT, 0, true);
             DoCast(me, SPELL_RUNIC_FORTIFICATION, true);
