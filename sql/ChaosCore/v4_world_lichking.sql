@@ -4,6 +4,6 @@ INSERT INTO `item_template` (`entry`, `class`, `subclass`, `unk0`, `name`, `disp
 (50840, 2, 7, -1, 'Monster - Frostmourne, Broken (Arthas Only Special)', 64086, 4, 0, 0, 0, 0, 0, 21, -1, -1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 4, 4, 14, 3, 20, 7, 10, 14, 20, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 20, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2900, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, '', 0, 0, 0, 0, 0, 1, 3, 0, 0, 0, 0, 120, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'internalitemhanler', 0, 0, 0, 0, 1);
 
 -- FoF SpellScript
-DELETE FROM ´spell_script_names´ WHERE (`entry` = 72350);
-INSERT INTO ´spell_script_names´ VALUES
+DELETE FROM `spell_script_names` WHERE (`entry` = 72350);
+INSERT INTO `spell_script_names` VALUES
 (72350, 'spell_lich_king_fury_of_frostmourne');
