@@ -551,7 +551,7 @@ class boss_the_lich_king : public CreatureScript
 
                 if (Creature* tirion = Unit::GetCreature(*me, uiTirionGUID))
                 {
-                    me->GetMotionMaster()->MoveFall(-3.0f, 0);
+                    me->GetMotionMaster()->MoveFall(2.9f, 0);
                     //me->SetPosition(me->GetPositionX(), me->GetPositionY(), tirion->GetPositionY(), me->GetOrientation(), true);
                     tirion->GetMotionMaster()->MovePoint(0, MovePos[1]);
                     tirion->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_NONE);
@@ -1180,21 +1180,21 @@ class boss_the_lich_king : public CreatureScript
                             case 13:
                             {
                                 me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_CUSTOM_SPELL_02);
-                                uiEndingTimer = 2000;
+                                uiEndingTimer = 1000;
                                 break;
                             }
                             case 14:
                             {
-                                me->CastSpell(me, SPELL_DROP_FROSTMOURNE, false);
-                                SetEquipmentSlots(false, EQUIP_UNEQUIP, EQUIP_NO_CHANGE, EQUIP_NO_CHANGE);
-                                uiEndingTimer = 250;
+                                if (Creature* tirion = Unit::GetCreature(*me, uiTirionGUID))
+                                    tirion->SetFacingToObject(me);
+                                uiEndingTimer = 1000;
                                 break;
                             }
                             case 15:
                             {
-                                if (Creature* tirion = Unit::GetCreature(*me, uiTirionGUID))
-                                    tirion->SetFacingToObject(me);
-                                uiEndingTimer = 250;
+                                me->CastSpell(me, SPELL_DROP_FROSTMOURNE, false);
+                                SetEquipmentSlots(false, EQUIP_UNEQUIP, EQUIP_NO_CHANGE, EQUIP_NO_CHANGE);
+                                uiEndingTimer = 500;
                                 break;
                             }
                             case 16:
@@ -1203,7 +1203,7 @@ class boss_the_lich_king : public CreatureScript
                                 if (Creature* tirion = Unit::GetCreature(*me, uiTirionGUID))
                                 {
                                     tirion->CastSpell(tirion, SPELL_KNOCKDOWN, true);
-                                    tirion->GetMotionMaster()->MoveKnockbackFrom(MovePos[10].GetPositionX(), MovePos[10].GetPositionY(), 9.0f, 5.0f);
+                                    tirion->GetMotionMaster()->MoveKnockbackFrom(MovePos[10].GetPositionX(), MovePos[10].GetPositionY(), 9.0f, 9.0f);
                                 }
                                 uiEndingTimer = 1000;
                                 break;
