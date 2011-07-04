@@ -551,7 +551,8 @@ class boss_the_lich_king : public CreatureScript
 
                 if (Creature* tirion = Unit::GetCreature(*me, uiTirionGUID))
                 {
-                    me->SetPosition(me->GetPositionX(), me->GetPositionY(), tirion->GetPositionY(), me->GetOrientation(), true);
+                    me->GetMotionMaster()->MoveFall(-3.0f, 0);
+                    //me->SetPosition(me->GetPositionX(), me->GetPositionY(), tirion->GetPositionY(), me->GetOrientation(), true);
                     tirion->GetMotionMaster()->MovePoint(0, MovePos[1]);
                     tirion->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_NONE);
                     tirion->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
