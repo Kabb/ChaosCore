@@ -403,7 +403,7 @@ class boss_the_lich_king : public CreatureScript
 
                 if (SpellEntry* furyOfFrostmourne = GET_SPELL(SPELL_FURY_OF_FROSTMOURNE))
                 {
-                    furyOfFrostmourne->Effect[0] = SPELL_EFFECT_DUMMY;
+                    furyOfFrostmourne->Effect[0] = SPELL_EFFECT_APPLY_AURA;
                     furyOfFrostmourne->Effect[1] = SPELL_EFFECT_INSTAKILL;
                     furyOfFrostmourne->EffectRadiusIndex[0] = 22;
                     furyOfFrostmourne->EffectRadiusIndex[1] = 22;
@@ -3772,7 +3772,7 @@ class spell_lich_king_fury_of_frostmourne : public SpellScriptLoader
 
             void Register()
             {
-                OnEffect += SpellEffectFn(spell_lich_king_fury_of_frostmourneSpellScript::HandleDummy, EFFECT_0, SPELL_EFFECT_DUMMY);
+                OnEffect += SpellEffectFn(spell_lich_king_fury_of_frostmourneSpellScript::HandleDummy, EFFECT_0, SPELL_EFFECT_APPLY_AURA);
             }
         };
 
