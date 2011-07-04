@@ -260,7 +260,8 @@ enum Spells
     SPELL_ENRAGE                                           = 72143,
     SPELL_FRENZY                                           = 28747,
     SPELL_SOUL_SHRIEK                                      = 69242,
-    SPELL_FURY_OF_FROSTMOURNE_NORES                        = 72351
+    SPELL_FURY_OF_FROSTMOURNE_NORES                        = 72351,
+    SPELL_KNOCKDOWN                                        = 68848,
 };
 
 enum eActions
@@ -550,6 +551,7 @@ class boss_the_lich_king : public CreatureScript
 
                 if (Creature* tirion = Unit::GetCreature(*me, uiTirionGUID))
                 {
+                    tirion->GetMotionMaster()->MovePoint(0, MovePos[1]);
                     tirion->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_NONE);
                     tirion->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
                     tirion->SetReactState(REACT_PASSIVE);
@@ -1175,15 +1177,13 @@ class boss_the_lich_king : public CreatureScript
                             case 13:
                             {
                                 me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_CUSTOM_SPELL_02);
-                                uiEndingTimer = 2000;
+                                uiEndingTimer = 3000;
                                 break;
                             }
                             case 14:
                             {
                                 me->CastSpell(me, SPELL_DROP_FROSTMOURNE, false);
                                 SetEquipmentSlots(false, EQUIP_UNEQUIP, EQUIP_NO_CHANGE, EQUIP_NO_CHANGE);
-                                if (Creature* tirion = Unit::GetCreature(*me, uiTirionGUID))
-                                    tirion->SetUInt64Value(UNIT_FIELD_TARGET, me->GetGUID());
                                 uiEndingTimer = 500;
                                 break;
                             }
@@ -1191,7 +1191,11 @@ class boss_the_lich_king : public CreatureScript
                             {
                                 // Here Tirion is knocked back to the teleport circle
                                 if (Creature* tirion = Unit::GetCreature(*me, uiTirionGUID))
-                                    tirion->GetMotionMaster()->MoveKnockbackFrom(MovePos[10].GetPositionX(), MovePos[10].GetPositionY(), 10.0f, 15.0f);
+                                {
+                                    tirion->SetFacingToObject(me);
+                                    tirion->CastSpell(tirion, SPELL_KNOCKDOWN, true);
+                                    tirion->GetMotionMaster()->MoveKnockbackFrom(MovePos[10].GetPositionX(), MovePos[10].GetPositionY(), 5.0f, 5.0f);
+                                }
                                 //DoPlaySoundToSet(me, SOUND_ENDING_7_KING);
                                 uiEndingTimer = 1000;
                                 break;
@@ -1204,13 +1208,10 @@ class boss_the_lich_king : public CreatureScript
                             }
                             case 17:
                             {
-                                me->CastSpell(me, 34873, true);
                                 me->CastSpell(me, SPELL_SOUL_EFFECT, true);
                                 if (Creature* frostmourne = me->FindNearestCreature(NPC_FROSTMOURNE_TRIGGER, 25.0f, true))
-                                {
-                                    //me->SetFlying(true);
-                                    me->GetMotionMaster()->MovePoint(0, frostmourne->GetPositionX(),frostmourne->GetPositionY(), frostmourne->GetPositionZ());
-                                }        
+                                    me->GetMotionMaster()->MovePoint(0, frostmourne->GetPositionX(),frostmourne->GetPositionY(), frostmourne->GetPositionZ() + 5.0f);
+
                                 uiEndingTimer = 5000;
                                 break;
                             }

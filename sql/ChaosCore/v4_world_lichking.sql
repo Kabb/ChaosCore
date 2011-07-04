@@ -7,3 +7,8 @@ INSERT INTO `item_template` (`entry`, `class`, `subclass`, `unk0`, `name`, `disp
 DELETE FROM `spell_script_names` WHERE (`entry` = 72350);
 INSERT INTO `spell_script_names` VALUES
 (72350, 'spell_lich_king_fury_of_frostmourne');
+
+-- Lich King: Soul Barrage should make him fly for outro
+DELETE FROM `spell_linked_spell` WHERE (`spell_trigger` = 72305);
+INSERT INTO `spell_linked_spell` VALUES
+(72305, 34873, 2, 'Soul Barrage linked to Fly');
