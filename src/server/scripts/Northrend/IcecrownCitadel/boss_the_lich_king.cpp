@@ -1031,7 +1031,7 @@ class boss_the_lich_king : public CreatureScript
 
                 if (GetPhase(events) == PHASE_6_ENDING)
                 {
-                    if (uiStage > 23)
+                    if (uiStage > 24)
                         return;
 
                     if (uiEndingTimer <= diff)
@@ -1168,50 +1168,53 @@ class boss_the_lich_king : public CreatureScript
                                 //Equip broken Frostmourne
                                 SetEquipmentSlots(false, 50840, EQUIP_NO_CHANGE, EQUIP_NO_CHANGE);
                                 me->CastSpell(me, SPELL_BOOM_VISUAL, false);
-                                me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_CUSTOM_SPELL_02);
                                 me->HandleEmoteCommand(EMOTE_STATE_CUSTOM_SPELL_01);
-                                uiEndingTimer = 4000;
+                                uiEndingTimer = 2000;
                                 break;
                             }
                             case 13:
                             {
-                                me->CastSpell(me, SPELL_DROP_FROSTMOURNE, false);
-                                SetEquipmentSlots(false, EQUIP_UNEQUIP, EQUIP_NO_CHANGE, EQUIP_NO_CHANGE);
-                                if (Creature* tirion = Unit::GetCreature(*me, uiTirionGUID))
-                                    tirion->SetFacingToObject(me);
-                                uiEndingTimer = 500;
+                                me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_CUSTOM_SPELL_02);
+                                uiEndingTimer = 2000;
                                 break;
                             }
                             case 14:
                             {
-                                // Here Tirion should be knocked back to the teleport circle
+                                me->CastSpell(me, SPELL_DROP_FROSTMOURNE, false);
+                                SetEquipmentSlots(false, EQUIP_UNEQUIP, EQUIP_NO_CHANGE, EQUIP_NO_CHANGE);
                                 if (Creature* tirion = Unit::GetCreature(*me, uiTirionGUID))
-                                {
-                                    tirion->SetPosition(MovePos[11]);
+                                    tirion->SetUInt64Value(UNIT_FIELD_TARGET, me->GetGUID());
+                                uiEndingTimer = 500;
+                                break;
+                            }
+                            case 15:
+                            {
+                                // Here Tirion is knocked back to the teleport circle
+                                if (Creature* tirion = Unit::GetCreature(*me, uiTirionGUID))
                                     tirion->GetMotionMaster()->MoveKnockbackFrom(MovePos[10].GetPositionX(), MovePos[10].GetPositionY(), 10.0f, 15.0f);
-                                }
                                 //DoPlaySoundToSet(me, SOUND_ENDING_7_KING);
                                 uiEndingTimer = 1000;
                                 break;
                             }
-                            case 15:
+                            case 16:
                             {
                                 DoScriptText(SAY_ENDING_6_KING, me);
                                 uiEndingTimer = 5000;
                                 break;
                             }
-                            case 16:
+                            case 17:
                             {
-                                me->SetUInt32Value(UNIT_NPC_EMOTESTATE, 473);
+                                me->CastSpell(me, 34873, true);
+                                me->CastSpell(me, SPELL_SOUL_EFFECT, true);
                                 if (Creature* frostmourne = me->FindNearestCreature(NPC_FROSTMOURNE_TRIGGER, 25.0f, true))
                                 {
                                     //me->SetFlying(true);
-                                    me->GetMotionMaster()->MoveJump(frostmourne->GetPositionX(),frostmourne->GetPositionY(), frostmourne->GetPositionZ(), 0.5f,  1.0f);
+                                    me->GetMotionMaster()->MovePoint(0, frostmourne->GetPositionX(),frostmourne->GetPositionY(), frostmourne->GetPositionZ());
                                 }        
                                 uiEndingTimer = 5000;
                                 break;
                             }
-                            case 17:
+                            case 18:
                             {
                                 if (uiTirionGUID)
                                     if (Creature* tirion = Unit::GetCreature(*me, uiTirionGUID))
@@ -1220,7 +1223,7 @@ class boss_the_lich_king : public CreatureScript
                                 uiEndingTimer = 6000;
                                 break;
                             }
-                            case 18:
+                            case 19:
                             {
                                 if (Creature* frostmourne = me->FindNearestCreature(NPC_FROSTMOURNE_TRIGGER, 25.0f, true))
                                     frostmourne->CastSpell(frostmourne, SPELL_SUMMON_MENETHIL, true);
@@ -1228,7 +1231,7 @@ class boss_the_lich_king : public CreatureScript
                                 uiEndingTimer = 500;
                                 break;
                             }
-                            case 19:
+                            case 20:
                             {
                                 if (Creature* father = me->FindNearestCreature(NPC_TERENAS_MENETHIL, 25.0f, true))
                                 {
@@ -1238,7 +1241,7 @@ class boss_the_lich_king : public CreatureScript
                                 uiEndingTimer = 11000;
                                 break;
                             }
-                            case 20:
+                            case 21:
                             {
                                 if (Creature* father = me->FindNearestCreature(NPC_TERENAS_MENETHIL, 25.0f, true))
                                 {
@@ -1251,7 +1254,7 @@ class boss_the_lich_king : public CreatureScript
                                 uiEndingTimer = 6000;
                                 break;
                             }
-                            case 21:
+                            case 22:
                             {
                                 if (uiTirionGUID)
                                     if (Creature* tirion = Unit::GetCreature(*me, uiTirionGUID))
@@ -1260,7 +1263,7 @@ class boss_the_lich_king : public CreatureScript
                                 uiEndingTimer = 5000;
                                 break;
                             }
-                            case 22:
+                            case 23:
                             {
                                 DoScriptText(SAY_ENDING_12_KING, me);
                                 if (uiTirionGUID)
@@ -1282,7 +1285,7 @@ class boss_the_lich_king : public CreatureScript
                                 uiEndingTimer = 10000;
                                 break;
                             }
-                            case 23:
+                            case 24:
                             {
                                 DoScriptText(SAY_DEATH_KING, me);
                                 break;
