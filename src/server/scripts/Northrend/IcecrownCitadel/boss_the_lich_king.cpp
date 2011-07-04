@@ -1557,7 +1557,8 @@ class npc_tirion_icc : public CreatureScript
                             // Tirion runs to Arthas
                             me->RemoveUnitMovementFlag(MOVEMENTFLAG_WALKING);
                             me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_ONESHOT_NONE);
-                            me->GetMotionMaster()->MovePoint(0, MovePos[3]);
+                            if(Creature* lich = Unit::GetCreature(*me, uiLichKingGUID))
+                                me->GetMotionMaster()->MoveChase(lich, 1.0f, 0.0f);
                             uiIntroTimer = 1000;
                             break;
                         case 11:
@@ -1565,6 +1566,7 @@ class npc_tirion_icc : public CreatureScript
                             if(Creature* lich = Unit::GetCreature(*me, uiLichKingGUID))
                             {
                                 lich->CastSpell(me, SPELL_ICEBLOCK_TRIGGER, true);
+                                me->GetMotionMaster()->MoveIdle();
                                 me->SetFacingToObject(lich);
                             }
                             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
